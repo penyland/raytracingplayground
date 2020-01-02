@@ -28,7 +28,9 @@ namespace RaytracingPlayground
                 this.rayTracer = new RayTracer((float)this.canvas.ActualWidth, (float)this.canvas.ActualHeight, (int)this.canvas.Dpi);
             }
 
-            this.renderTarget = await this.rayTracer.RenderAsync();
+            //this.renderTarget = await this.rayTracer.RenderAsync();
+            //this.renderTarget = this.rayTracer.RenderBackground();
+            this.renderTarget = this.rayTracer.RenderSphere();
 
             this.canvas.Invalidate();
         }

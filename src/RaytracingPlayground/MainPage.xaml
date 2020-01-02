@@ -15,8 +15,8 @@
         <StackPanel Orientation="Vertical">
             <canvas:CanvasControl
                 x:Name="canvas"
-                Width="640"
-                Height="480"
+                Width="600"
+                Height="300"
                 Draw="canvas_Draw" />
             <Button
                 Name="btnRender"
