@@ -20,8 +20,20 @@
                 Draw="canvas_Draw" />
             <Button
                 Name="btnRender"
+                Margin="10"
                 Click="btnRender_Click"
                 Content="Render" />
+            <Button
+                x:Name="btnSave"
+                Margin="10"
+                Click="btnSave_Click"
+                Content="Save file"
+                IsEnabled="False" />
+            <Button
+                x:Name="btnTest"
+                Margin="10"
+                Click="btnTest_Click"
+                Content="Test" />
         </StackPanel>
 
     </Grid>

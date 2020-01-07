@@ -2,31 +2,25 @@
 //
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RaytracingPlayground
 {
     public class Ray
     {
+        private Vector3 origin;
+        private Vector3 direction;
+
         public Ray(Vector3 a, Vector3 b)
         {
-            this.A = a;
-            this.B = b;
+            this.origin = a;
+            this.direction = b;
         }
 
-        public Vector3 A { get; }
+        public Vector3 Origin => this.origin;
 
-        public Vector3 B { get; }
+        public Vector3 Direction => this.direction;
 
-        public Vector3 Origin => this.A;
-
-        public Vector3 Direction => this.B;
-
-        public Vector3 PointAtParameter(float t) => this.A + (t * this.B);
+        public Vector3 PointAt(float t) => this.origin + (t * this.direction);
     }
 }
