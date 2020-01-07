@@ -6,6 +6,6 @@ namespace RaytracingPlayground
 {
     public interface IHittable
     {
-        bool Hit(Ray ray, float t_min, float t_max, ref HitRecord hitRecord);
+        bool Hit(Ray ray, float t_min, float t_max, out HitRecord hitRecord);
     }
 }

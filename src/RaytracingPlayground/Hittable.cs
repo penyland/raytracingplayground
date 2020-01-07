@@ -6,6 +6,6 @@ namespace RaytracingPlayground
 {
     public abstract class Hittable : IHittable
     {
-        public abstract bool Hit(Ray ray, float t_min, float t_max, ref HitRecord hitRecord);
+        public abstract bool Hit(Ray ray, float t_min, float t_max, out HitRecord hitRecord);
     }
 }

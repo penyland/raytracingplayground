@@ -15,16 +15,16 @@ namespace RaytracingPlayground
 
         public List<IHittable> Hittables { get; }
 
-        public bool Hit(Ray ray, float t_min, float t_max, ref HitRecord hitRecord)
+        public bool Hit(Ray ray, float t_min, float t_max, out HitRecord hitRecord)
         {
-            HitRecord tempHitRecord = default;
             bool hit_anything = false;
+            hitRecord = default;
 
             float closest_so_far = t_max;
 
             foreach (var hittable in this.Hittables)
             {
-                if (hittable.Hit(ray, t_min, closest_so_far, ref tempHitRecord))
+                if (hittable.Hit(ray, t_min, closest_so_far, out HitRecord tempHitRecord))
                 {
                     hit_anything = true;
                     closest_so_far = tempHitRecord.t;

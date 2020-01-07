@@ -3,11 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RaytracingPlayground
 {
@@ -27,8 +23,10 @@ namespace RaytracingPlayground
 
         public float Radius { get; set; }
 
-        public override bool Hit(Ray ray, float t_min, float t_max, ref HitRecord hitRecord)
+        public override bool Hit(Ray ray, float t_min, float t_max, out HitRecord hitRecord)
         {
+            hitRecord = default;
+
             Vector3 oc = ray.Origin - this.Center;
             float a = Vector3.Dot(ray.Direction, ray.Direction);
             float b = Vector3.Dot(oc, ray.Direction);
