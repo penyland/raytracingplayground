@@ -35,7 +35,7 @@ namespace RaytracingPlayground
 
             int width = (int)this.RenderTarget.SizeInPixels.Width;
             int height = (int)this.RenderTarget.SizeInPixels.Height;
-            int ns = 10;
+            int numberOfSamples = 100;
 
             byte[] buffer = this.renderTarget.GetPixelBytes();
             int index = 0;
@@ -47,7 +47,7 @@ namespace RaytracingPlayground
                     for (int i = 0; i < width; i++)
                     {
                         Vector3 color = Vector3.Zero;
-                        for (int s = 0; s < ns; s++)
+                        for (int sample = 0; sample < numberOfSamples; sample++)
                         {
                             float u = (float)(i + Random.NextDouble()) / width;
                             float v = (float)(j + Random.NextDouble()) / height;
@@ -56,7 +56,10 @@ namespace RaytracingPlayground
                             color += this.ComputeColor(ray, world.Items);
                         }
 
-                        color /= ns;
+                        color /= numberOfSamples;
+
+                        // Gamma correction
+                        color = new Vector3(MathF.Sqrt(color.X), MathF.Sqrt(color.Y), MathF.Sqrt(color.Z));
 
                         // var color = new Vector3((float)i / width, (float)j / height, 0.2f);
                         buffer[index + 0] = (byte)(color.Z * 0xFF);
@@ -76,10 +79,11 @@ namespace RaytracingPlayground
 
         private Vector3 ComputeColor(Ray ray, IHittable world)
         {
-            HitRecord hit = default;
-            if (world.Hit(ray, 0.0f, float.MaxValue, ref hit))
+            if (world.Hit(ray, 0.001f, float.MaxValue, out HitRecord hit))
             {
-                return 0.5f * new Vector3(hit.Normal.X + 1.0f, hit.Normal.Y + 1.0f, hit.Normal.Z + 1.0f);
+                Vector3 target = hit.P + hit.Normal + this.RandomInUnitSphere();
+
+                return 0.5f * this.ComputeColor(new Ray(hit.P, target - hit.P), world);
             }
             else
             {
@@ -92,6 +96,21 @@ namespace RaytracingPlayground
         {
             float t = 0.5f * (Vector3.Normalize(ray.Direction).Y + 1.0f);
             return Vector3.Lerp(Vector3.One, new Vector3(0.5f, 0.7f, 1.0f), t);
+        }
+
+        private Vector3 RandomInUnitSphere()
+        {
+            Vector3 p;
+            do
+            {
+                p = (2.0f * new Vector3(
+                    (float)Random.NextDouble(),
+                    (float)Random.NextDouble(),
+                    (float)Random.NextDouble())) - Vector3.One;
+            }
+            while (p.LengthSquared() >= 1.0f);
+
+            return p;
         }
     }
 }
