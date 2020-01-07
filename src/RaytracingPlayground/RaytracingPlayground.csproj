@@ -120,6 +120,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Camera.cs" />
     <Compile Include="FrameBuffer.cs" />
     <Compile Include="HitRecord.cs" />
     <Compile Include="Hittable.cs" />

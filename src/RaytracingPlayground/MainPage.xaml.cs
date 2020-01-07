@@ -28,6 +28,9 @@ namespace RaytracingPlayground
 
         private async void btnRender_Click(object sender, RoutedEventArgs e)
         {
+            this.btnSave.IsEnabled = false;
+            this.btnRender.IsEnabled = false;
+
             if (this.rayTracer == null)
             {
                 this.rayTracer = new RayTracer((float)this.canvas.ActualWidth, (float)this.canvas.ActualHeight, (int)this.canvas.Dpi);
@@ -43,6 +46,7 @@ namespace RaytracingPlayground
             this.canvas.Invalidate();
 
             this.btnSave.IsEnabled = true;
+            this.btnRender.IsEnabled = true;
         }
 
         private void canvas_Draw(Microsoft.Graphics.Canvas.UI.Xaml.CanvasControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasDrawEventArgs args)

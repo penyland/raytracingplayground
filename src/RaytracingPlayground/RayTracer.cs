@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using Microsoft.Graphics.Canvas;
+using System;
 using System.Numerics;
 using System.Threading.Tasks;
 
@@ -10,6 +11,8 @@ namespace RaytracingPlayground
 {
     public class RayTracer
     {
+        private static readonly Random Random = new Random();
+
         private readonly CanvasRenderTarget renderTarget;
 
         public RayTracer(float width, float height, int dpi)
@@ -28,37 +31,43 @@ namespace RaytracingPlayground
 
         public async Task<CanvasRenderTarget> RenderAsync(World world)
         {
-            // Viewport
-            Vector3 lower_left_corner = new Vector3(-2.0f, -1.0f, -1.0f);
-            Vector3 horizontal = new Vector3(4.0f, 0.0f, 0.0f);
-            Vector3 vertical = new Vector3(0.0f, 2.0f, 0.0f);
-            Vector3 origin = new Vector3(0.0f, 0.0f, 0.0f);
+            var camera = new Camera();
 
             int width = (int)this.RenderTarget.SizeInPixels.Width;
             int height = (int)this.RenderTarget.SizeInPixels.Height;
+            int ns = 10;
 
             byte[] buffer = this.renderTarget.GetPixelBytes();
             int index = 0;
 
-            for (int j = height - 1; j >= 0; j--)
+            await Task.Run(() =>
             {
-                for (int i = 0; i < width; i++)
+                for (int j = height - 1; j >= 0; j--)
                 {
-                    float u = (float)i / width;
-                    float v = (float)j / height;
+                    for (int i = 0; i < width; i++)
+                    {
+                        Vector3 color = Vector3.Zero;
+                        for (int s = 0; s < ns; s++)
+                        {
+                            float u = (float)(i + Random.NextDouble()) / width;
+                            float v = (float)(j + Random.NextDouble()) / height;
 
-                    var ray = new Ray(origin, lower_left_corner + (u * horizontal) + (v * vertical));
-                    Vector3 color = this.ComputeColor(ray, world.Items);
+                            Ray ray = camera.GetRay(u, v);
+                            color += this.ComputeColor(ray, world.Items);
+                        }
 
-                    // var color = new Vector3((float)i / width, (float)j / height, 0.2f);
-                    buffer[index + 0] = (byte)(color.Z * 0xFF);
-                    buffer[index + 1] = (byte)(color.Y * 0xFF);
-                    buffer[index + 2] = (byte)(color.X * 0xFF);
-                    buffer[index + 3] = 1;
+                        color /= ns;
 
-                    index += 4;
+                        // var color = new Vector3((float)i / width, (float)j / height, 0.2f);
+                        buffer[index + 0] = (byte)(color.Z * 0xFF);
+                        buffer[index + 1] = (byte)(color.Y * 0xFF);
+                        buffer[index + 2] = (byte)(color.X * 0xFF);
+                        buffer[index + 3] = 1;
+
+                        index += 4;
+                    }
                 }
-            }
+            });
 
             this.renderTarget.SetPixelBytes(buffer);
 
