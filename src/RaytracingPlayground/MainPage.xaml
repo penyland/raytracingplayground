@@ -13,11 +13,25 @@
 
     <Grid>
         <StackPanel Orientation="Vertical">
-            <canvas:CanvasControl
-                x:Name="canvas"
-                Width="600"
-                Height="300"
-                Draw="canvas_Draw" />
+            <StackPanel
+                Width="800"
+                Margin="100,0,100,0"
+                HorizontalAlignment="Center"
+                Orientation="Vertical">
+                <canvas:CanvasControl
+                    x:Name="canvas"
+                    Width="600"
+                    Height="300"
+                    Margin="10"
+                    Draw="canvas_Draw" />
+                <ProgressBar
+                    Name="progress"
+                    Margin="10"
+                    IsIndeterminate="False"
+                    Maximum="100"
+                    Minimum="0"
+                    Value="0" />
+            </StackPanel>
             <Button
                 Name="btnRender"
                 Margin="10"

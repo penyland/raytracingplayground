@@ -29,7 +29,7 @@ namespace RaytracingPlayground
 
         public CanvasRenderTarget RenderTarget => this.renderTarget;
 
-        public async Task<CanvasRenderTarget> RenderAsync(World world)
+        public async Task<CanvasRenderTarget> RenderAsync(World world, IProgress<RenderProgress> progress)
         {
             var camera = new Camera();
 
@@ -68,6 +68,17 @@ namespace RaytracingPlayground
                         buffer[index + 3] = 1;
 
                         index += 4;
+                    }
+
+                    if (progress != null)
+                    {
+                        var renderProgress = new RenderProgress()
+                        {
+                            Current = index,
+                            Total = buffer.Length,
+                        };
+
+                        progress.Report(renderProgress);
                     }
                 }
             });

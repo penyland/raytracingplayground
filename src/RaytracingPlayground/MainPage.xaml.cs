@@ -41,7 +41,13 @@ namespace RaytracingPlayground
             world.Add(new Sphere(new Vector3(0, 0, -1), 0.5f));
             world.Add(new Sphere(new Vector3(0, -100.5f, -1), 100f));
 
-            this.renderTarget = await this.rayTracer.RenderAsync(world);
+            this.renderTarget = await this.rayTracer.RenderAsync(
+                world,
+                new Progress<RenderProgress>(p =>
+                {
+                    this.progress.Maximum = p.Total;
+                    this.progress.Value = p.Current;
+                }));
 
             this.canvas.Invalidate();
 
