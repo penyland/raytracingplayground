@@ -9,19 +9,18 @@ namespace RaytracingPlayground
 {
     public class Sphere : Hittable
     {
-        public Sphere()
-        {
-        }
-
-        public Sphere(Vector3 center, float r)
+        public Sphere(Vector3 center, float r, Material material)
         {
             this.Center = center;
             this.Radius = r;
+            this.Material = material;
         }
 
         public Vector3 Center { get; set; }
 
         public float Radius { get; set; }
+
+        public Material Material { get; }
 
         public override bool Hit(Ray ray, float t_min, float t_max, out HitRecord hitRecord)
         {
@@ -41,6 +40,7 @@ namespace RaytracingPlayground
                     hitRecord.t = temp;
                     hitRecord.P = ray.PointAt(hitRecord.t);
                     hitRecord.Normal = (hitRecord.P - this.Center) / this.Radius;
+                    hitRecord.Material = this.Material;
                     return true;
                 }
 
@@ -50,6 +50,7 @@ namespace RaytracingPlayground
                     hitRecord.t = temp;
                     hitRecord.P = ray.PointAt(hitRecord.t);
                     hitRecord.Normal = (hitRecord.P - this.Center) / this.Radius;
+                    hitRecord.Material = this.Material;
                     return true;
                 }
             }

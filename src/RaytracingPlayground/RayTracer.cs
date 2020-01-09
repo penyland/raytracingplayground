@@ -53,7 +53,7 @@ namespace RaytracingPlayground
                             float v = (float)(j + Random.NextDouble()) / height;
 
                             Ray ray = camera.GetRay(u, v);
-                            color += this.ComputeColor(ray, world.Items);
+                            color += this.ComputeColor(ray, world.Items, 0);
                         }
 
                         color /= numberOfSamples;
@@ -88,13 +88,25 @@ namespace RaytracingPlayground
             return this.renderTarget;
         }
 
-        private Vector3 ComputeColor(Ray ray, IHittable world)
+        private Vector3 ComputeColor(Ray ray, IHittable world, int depth)
         {
             if (world.Hit(ray, 0.001f, float.MaxValue, out HitRecord hit))
             {
-                Vector3 target = hit.P + hit.Normal + this.RandomInUnitSphere();
+                Ray scattered;
+                Vector3 attenuation;
 
-                return 0.5f * this.ComputeColor(new Ray(hit.P, target - hit.P), world);
+                if (depth < 50 && hit.Material.Scatter(ray, hit, out attenuation, out scattered))
+                {
+                    return attenuation * this.ComputeColor(scattered, world, depth++);
+                }
+                else
+                {
+                    return Vector3.Zero;
+                }
+
+                //Vector3 target = hit.P + hit.Normal + RandomUtils.InUnitSphere();
+
+                //return 0.5f * this.ComputeColor(new Ray(hit.P, target - hit.P), world);
             }
             else
             {
@@ -107,21 +119,6 @@ namespace RaytracingPlayground
         {
             float t = 0.5f * (Vector3.Normalize(ray.Direction).Y + 1.0f);
             return Vector3.Lerp(Vector3.One, new Vector3(0.5f, 0.7f, 1.0f), t);
-        }
-
-        private Vector3 RandomInUnitSphere()
-        {
-            Vector3 p;
-            do
-            {
-                p = (2.0f * new Vector3(
-                    (float)Random.NextDouble(),
-                    (float)Random.NextDouble(),
-                    (float)Random.NextDouble())) - Vector3.One;
-            }
-            while (p.LengthSquared() >= 1.0f);
-
-            return p;
         }
     }
 }

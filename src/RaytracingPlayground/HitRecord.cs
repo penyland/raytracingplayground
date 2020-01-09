@@ -13,5 +13,7 @@ namespace RaytracingPlayground
         public Vector3 P;
 
         public Vector3 Normal { get; set; }
+
+        public Material Material { get; set; }
     }
 }
